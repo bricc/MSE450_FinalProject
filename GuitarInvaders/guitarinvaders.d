@@ -1,0 +1,12 @@
+.\guitarinvaders.o: GuitarInvaders.c
+.\guitarinvaders.o: C:\Keil\ARM\ARMCC\bin\..\include\stdio.h
+.\guitarinvaders.o: C:\Keil\ARM\ARMCC\bin\..\include\stdint.h
+.\guitarinvaders.o: C:\Keil\ARM\ARMCC\bin\..\include\string.h
+.\guitarinvaders.o: tm4c123gh6pm.h
+.\guitarinvaders.o: Nokia5110.h
+.\guitarinvaders.o: Random.h
+.\guitarinvaders.o: ADCSWTrigger.h
+.\guitarinvaders.o: PLL.h
+.\guitarinvaders.o: TExaS.h
+.\guitarinvaders.o: GI_BitMaps.h
+.\guitarinvaders.o: UART.h
