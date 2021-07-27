@@ -1,1 +1,0 @@
-Guitar Invaders is a C-based video game that is made to run on TM4C123GH6PM's simulated environment on Keil's uVisions 4 IDE.
