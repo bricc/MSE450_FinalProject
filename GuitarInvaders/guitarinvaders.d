@@ -2,6 +2,7 @@
 .\guitarinvaders.o: C:\Keil\ARM\ARMCC\bin\..\include\stdio.h
 .\guitarinvaders.o: C:\Keil\ARM\ARMCC\bin\..\include\stdint.h
 .\guitarinvaders.o: C:\Keil\ARM\ARMCC\bin\..\include\string.h
+.\guitarinvaders.o: C:\Keil\ARM\ARMCC\bin\..\include\stdbool.h
 .\guitarinvaders.o: tm4c123gh6pm.h
 .\guitarinvaders.o: Nokia5110.h
 .\guitarinvaders.o: Random.h

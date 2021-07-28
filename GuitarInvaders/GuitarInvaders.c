@@ -20,6 +20,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>
+#include <stdbool.h>
 #include "tm4c123gh6pm.h"
 #include "Nokia5110.h"
 #include "Random.h"
@@ -80,6 +81,7 @@ void EdgeCounter_Init(void);
 /* GAME SPECIFIC FUNCTIONS */
 void Game_Menu(long volatile delay); // TITLE MENU (R1.0)
 void TitleScreen(long volatile delay);
+void GameOverScreen();
 void SongList(long volatile delay);
 void PortF_Init_2(void);
 void Delay100ms(unsigned long count);
@@ -175,6 +177,9 @@ unsigned long noteSpeed; //depending on the level
 unsigned int CurrentNote = 0;
 int deleteMeTemp;
 
+
+bool newGame; 
+
 void NoteSpeedFnc(){
 // How `enemySpeed` changes after every level
 // Higher value = enemies move faster
@@ -206,11 +211,14 @@ void NoteSpeedFnc(){
 	 
 	
 	while(1){
+		int delayBeforeGameBool = 0;
 		void UART_Init(void);
 		/* */ 
 		lvlCleared = 1;
 		PlayerLives = 3;
 		PlayerScore = 0;
+		
+		
 		/* UART INIT */ 
 		
 		/* INITIALIZE GAME */ 
@@ -228,7 +236,9 @@ void NoteSpeedFnc(){
 		/** REFRESEH SCREEN */ 
 		Nokia5110_ClearBuffer();
 		screenRefreshFlag = 1;
+		newGame = true; 
 		
+		Nokia5110_Clear();
 		/* MAIN GAME LOOP */
 		while(PlayerLives > 0){ 
 			while(screenRefreshFlag == 0){}  
@@ -253,8 +263,12 @@ void NoteSpeedFnc(){
 			
 		}//END MAIN LOOP
 		
-		isGameOver = 0;
+		newGame = false;
 		ResetLEDs();
+		
+		/* GAME OVER - SHOW SCORE */
+		GameOverScreen();
+			
 	} 
 	
 }
@@ -410,9 +424,30 @@ void SongList(long volatile delay){
 
 
 /*******************************************************************************
-* SCREEN 3 - Actual Game 
+* SCREEN 4 - Game Over
 *******************************************************************************/
+void GameOverScreen(){
+		Nokia5110_Clear();
+	while(!START){
+		Nokia5110_SetCursor(1,1);
+		Nokia5110_OutString("GAME OVER! ");
+		//Nokia5110_SetCursor(2,1);
+		//Nokia5110_OutString("Song 1");
+		Nokia5110_SetCursor(0,3);
+		Nokia5110_OutString("Final  Score"); 
+		Nokia5110_SetCursor(2,5);
+		Nokia5110_OutUDec(PlayerScore); 
 
+		/*GPIO_PORTF_DATA_R |= 0x04;*/         // profile
+		//ADCvalue = Slide_Potentiometer();
+		/*GPIO_PORTF_DATA_R &= ~0x04;*/
+		
+		// delay
+		for(delay=0; delay<100000; delay++){};
+	}	
+	Nokia5110_Clear();
+	
+}
 /*******************************************************************************
 * TIMERS - INIT AND HANDLERS
 *******************************************************************************/
@@ -433,7 +468,10 @@ void SysTick_Handler(void){
 	
 	//GPIO_PORTF_DATA_R ^= 0x04;       // toggle PF2
 
-	Move(20);
+	if(newGame){
+		Move(20);
+	}
+	
 	/**************************************/
 	// Collision Check 
 	for(i=0;i<songDuration;i++){
@@ -611,9 +649,21 @@ void HUDBuffer(void){
 	if (ADCvalue<1024){ tempPotValue = 1; }
 	else if (ADCvalue > 1024 & ADCvalue < 3072){ tempPotValue = 2; }
 	else {tempPotValue = 3;}
-		
-	//Nokia5110_PrintBMP(
-
+	
+	/* PLAYER LIVES STATUS */
+	if(PlayerLives > 0){
+		if(PlayerLives == 1){
+			Nokia5110_PrintBMP(2, 3, playerLivesSprite, 0);
+		}else if(PlayerLives == 2){
+			Nokia5110_PrintBMP(2, 3, playerLivesSprite, 0);
+			Nokia5110_PrintBMP(10, 3, playerLivesSprite, 0);
+		}else{
+			Nokia5110_PrintBMP(2, 3, playerLivesSprite, 0);
+			Nokia5110_PrintBMP(10, 3, playerLivesSprite, 0);
+			Nokia5110_PrintBMP(18, 3, playerLivesSprite, 0);
+		}
+	}
+	
 	// Display HUD of 3 Notes, if Button is pressed, change corresponding Note to filled to indicate it was pressed
 	if (SW1 == 0x00){
 		if (ADCvalue<1024){
@@ -687,6 +737,7 @@ void songInit(int song[], int songDuration){
 }
 // Move all Notes to right, Make notes going into HUD not visible to prepare for separate animation.
 void Move(int songDuration){ 
+	
 	int i;
   for(i=0;i<songDuration;i++){
 		Note[i].x += 1;
