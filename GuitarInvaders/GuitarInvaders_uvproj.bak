@@ -7,7 +7,7 @@
 
   <Targets>
     <Target>
-      <TargetName>GuitarInvaders</TargetName>
+      <TargetName>SpaceInvaders</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
       <TargetOption>
@@ -429,16 +429,6 @@
               <FileName>GuitarInvaders.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\GuitarInvaders.c</FilePath>
-            </File>
-            <File>
-              <FileName>ADCSWTrigger.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\ADCSWTrigger.c</FilePath>
-            </File>
-            <File>
-              <FileName>UART.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\UART.c</FilePath>
             </File>
           </Files>
         </Group>
